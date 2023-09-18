@@ -1,4 +1,4 @@
-# fly.toml app configuration file generated for topdeck on 2023-09-17T20:43:02-04:00
+# fly.toml app configuration file generated for topdeck on 2023-09-17T22:27:15-04:00
 #
 # See https://fly.io/docs/reference/configuration/ for information about how to use this file.
 #
@@ -7,6 +7,9 @@ app = "topdeck"
 primary_region = "yyz"
 
 [build]
+
+[deploy]
+  release_command = "npx prisma migrate deploy"
 
 [http_service]
   internal_port = 3000

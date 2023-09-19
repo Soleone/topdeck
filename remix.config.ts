@@ -4,7 +4,7 @@ import { AppConfig } from "@remix-run/dev";
 export default {
   ignoredRouteFiles: ["**/.*"],
   tailwind: true,
-  // appDirectory: "app",
+  postcss: true,
   // assetsBuildDirectory: "public/build",
   // publicPath: "/build/",
   // serverBuildPath: "build/index.js",

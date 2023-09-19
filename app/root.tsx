@@ -9,6 +9,9 @@ import {
   ScrollRestoration,
 } from "@remix-run/react";
 
+export { ErrorBoundary } from "./components/error_boundary";
+
+
 export const links: LinksFunction = () => [
   ...(cssBundleHref ? [{ rel: "stylesheet", href: cssBundleHref }] : []),
 ];

@@ -28,7 +28,7 @@ export default function FeedbackRoute() {
   const errors = useActionData<typeof action>()
 
   return (
-    <div>
+    <div className="">
       <h1>Leave feedback</h1>
       <Form method="post">
         <label>Your message</label>

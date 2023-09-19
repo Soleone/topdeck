@@ -1,6 +1,11 @@
 import type { ActionFunctionArgs } from "@remix-run/node"
 import { json, redirect } from "@remix-run/node"
 import { Form, useActionData, useLoaderData } from "@remix-run/react"
+import { Button } from "~/components/ui/button";
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "~/components/ui/card";
+import { Input } from "~/components/ui/input";
+import { Label } from "~/components/ui/label";
+import { Textarea } from "~/components/ui/textarea";
 import { db } from '~/utils/db.server'
 
 export async function action({
@@ -28,21 +33,24 @@ export default function FeedbackRoute() {
   const errors = useActionData<typeof action>()
 
   return (
-    <div className="">
-      <h1>Leave feedback</h1>
+    <div>
       <Form method="post">
-        <label>Your message</label>
-        <br />
-        <textarea name="content" />
-        <br />
-        {errors?.content}
-        <br />
-        <label>Your name</label>
-        <br />
-        <input type="text" name="author" />
-        <br />
-        <br />
-        <button type="submit">Submit</button>
+        <Card className="">
+          <CardHeader>
+            <CardTitle>Leave feedback</CardTitle>
+            <CardDescription>Send us a message and we'll see if we can incorporate it in the show.</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <Label>Your message</Label>
+            <Textarea name="content" />
+            {errors?.content ? <div className="text-red-500">{errors?.content}</div> : null}
+            <Label>Your name</Label>
+            <Input type="text" name="author" />
+          </CardContent>
+          <CardFooter>
+            <Button type="submit">Submit</Button>
+          </CardFooter>
+        </Card>
       </Form>
     </div>
   )

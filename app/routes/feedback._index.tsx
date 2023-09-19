@@ -1,7 +1,6 @@
-import { Feedback } from "@prisma/client";
 import type { ActionFunctionArgs } from "@remix-run/node"
 import { json, redirect } from "@remix-run/node"
-import { Form, useLoaderData } from "@remix-run/react"
+import { Form, useActionData, useLoaderData } from "@remix-run/react"
 import { db } from '~/utils/db.server'
 
 export async function action({
@@ -13,52 +12,38 @@ export async function action({
   const content = body.get("content")?.toString()
 
   if (!content) {
-    throw new Error("Forgot to type your message!");
-
+    return json({ content: "Forgot to type your message!" })
+  } else {
+    const todo = await db.feedback.create({
+      data: {
+        author,
+        content,
+      }
+    })
+    return redirect("/feedback/thanks");
   }
-  const todo = await db.feedback.create({
-    data: {
-      author,
-      content,
-    }
-  })
-  return redirect("/feedback/thanks");
-}
-
-export async function loader() {
-  return json({ feedbacks: await db.feedback.findMany() });
 }
 
 export default function FeedbackRoute() {
-  const { feedbacks } = { feedbacks: useLoaderData<Feedback[]>() }
+  const errors = useActionData<typeof action>()
 
   return (
-    <>
-      <ul>
-        {feedbacks.map((feedback) => {
-          return <li key={feedback.id}>
-            <div>
-              {feedback.content} by {feedback.author}
-            </div>
-          </li>
-        })}
-      </ul>
-      <div>
-        <h1>Leave feedback</h1>
-        <Form method="post">
-          <label>Your message</label>
-          <br />
-          <textarea name="content" />
-          <br />
-          <br />
-          <label>Your name</label>
-          <br />
-          <input type="text" name="author" />
-          <br />
-          <br />
-          <button type="submit">Submit</button>
-        </Form>
-      </div>
-    </>
+    <div>
+      <h1>Leave feedback</h1>
+      <Form method="post">
+        <label>Your message</label>
+        <br />
+        <textarea name="content" />
+        <br />
+        {errors?.content}
+        <br />
+        <label>Your name</label>
+        <br />
+        <input type="text" name="author" />
+        <br />
+        <br />
+        <button type="submit">Submit</button>
+      </Form>
+    </div>
   )
 }

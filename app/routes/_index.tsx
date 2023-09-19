@@ -16,7 +16,6 @@ export default function Index() {
           <a
             target="_blank"
             href="https://topdeckpodcast.com"
-            rel="noreferrer"
           >
             Check out the podcast
           </a>

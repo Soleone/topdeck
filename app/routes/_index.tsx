@@ -1,26 +1,7 @@
-import type { MetaFunction } from "@remix-run/node";
+import type { LoaderFunction, MetaFunction } from "@remix-run/node"
 
-export const meta: MetaFunction = () => {
-  return [
-    { title: "Topdeck" },
-    { name: "description", content: "Gods Unchained pro players discuss the latest news and state of the game." },
-  ];
-};
+const ROOT_URL_REDIRECT = "https://podcasters.spotify.com/pod/show/topdeckpodcast"
 
-export default function Index() {
-  return (
-    <div className="">
-      <h1>Topdeck</h1>
-      <ul>
-        <li>
-          <a
-            target="_blank"
-            href="https://topdeckpodcast.com"
-          >
-            Check out the podcast
-          </a>
-        </li>
-      </ul>
-    </div>
-  );
+export const loader: LoaderFunction = () => {
+  return new Response(null, { status: 302, headers: { "Location": ROOT_URL_REDIRECT } })
 }

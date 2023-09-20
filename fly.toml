@@ -27,6 +27,6 @@ primary_region = "yyz"
     timeout = "2s"
     grace_period = "5s"
     method = "GET"
-    path = "/healthcheck"
+    path = "/home/healthcheck"
     protocol = "http"
     tls_skip_verify = false

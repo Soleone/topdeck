@@ -1,4 +1,4 @@
-import { Links, Meta, Scripts, isRouteErrorResponse, useRouteError } from "@remix-run/react";
+import { Links, Meta, Scripts, isRouteErrorResponse, useRouteError } from "@remix-run/react"
 
 export function ErrorBoundary() {
   const error = useRouteError()
@@ -27,5 +27,5 @@ export function ErrorBoundary() {
         <Scripts />
       </body>
     </html>
-  );
+  )
 }

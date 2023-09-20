@@ -1,5 +1,4 @@
 import type { LoaderFunction, MetaFunction } from "@remix-run/node"
-import { Outlet } from "@remix-run/react"
 
 const ROOT_URL_REDIRECT = "https://podcasters.spotify.com/pod/show/topdeckpodcast"
 

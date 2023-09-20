@@ -27,8 +27,15 @@ export default function App() {
         <Meta />
         <Links />
       </head>
-      <body className="">
-        <div className="max-w-sm mx-auto mt-8">
+      <body>
+        <div className="p-4 mx-0 lg:mx-auto max-w-full lg:max-w-screen-lg">
+          <h1 className="mb-10">
+            <a href="/home" className="flex flex-col items-center">
+              <img src="/logo.png" width="160" className="mb-2" />
+              <span className="text-center inline-blockr">a Gods Unchained podcast</span>
+            </a>
+          </h1>
+
           <Outlet />
         </div>
         <ScrollRestoration />

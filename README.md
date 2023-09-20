@@ -20,6 +20,26 @@ flyctl launch
 
 ## Development
 
+## Topdeck
+
+Podcast homepage customizable for your needs.
+
+## Live
+
+You can test the following URLs live:
+
+* https://topdeckpodcast.com redirects to external podcast site
+* https://topdeckpodcast.com/home displays home page
+
+## Features
+
+* Redirects from root url to external podcast page of your choice (e.g. Spotify for Podcasters)
+* /home displays customizable home page with embeddable episode list
+* /feedback displays a Form to submit text and author to a Prisma backed database
+* /thanks displays after submitting feedback
+
+## Contributing
+
 From your terminal:
 
 ```sh

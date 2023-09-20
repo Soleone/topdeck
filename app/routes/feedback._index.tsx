@@ -26,7 +26,7 @@ export async function action({
         content,
       }
     })
-    return redirect("/home/feedback/thanks");
+    return redirect("/feedback/thanks");
   }
 }
 

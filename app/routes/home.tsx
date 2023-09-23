@@ -12,7 +12,7 @@ export default function IndexRoute() {
   return <div className="mx-auto max-w-screen-md">
     <h2 className="text-2xl mb-4">Episodes</h2>
     <div>
-      {episodes.map((path) => <Episode path={path} />)}
+      {episodes.map((path) => <Episode key={path} path={path} />)}
     </div>
 
     <div className="mt-6">

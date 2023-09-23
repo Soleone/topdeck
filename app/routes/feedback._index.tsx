@@ -1,5 +1,5 @@
-import type { ActionFunctionArgs } from "@remix-run/node"
-import { json, redirect } from "@remix-run/node"
+import type { ActionFunctionArgs } from "@vercel/remix"
+import { json, redirect } from "@vercel/remix"
 import { Form, useActionData } from "@remix-run/react"
 
 import { Button } from "~/components/ui/button"

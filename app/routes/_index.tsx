@@ -1,4 +1,4 @@
-import type { LoaderFunction, MetaFunction } from "@vercel/remix"
+import type { LoaderFunction } from "@vercel/remix"
 
 const ROOT_URL_REDIRECT = "https://podcasters.spotify.com/pod/show/topdeckpodcast"
 

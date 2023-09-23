@@ -1,0 +1,9 @@
+{
+  "framework": "remix",
+  "routes": [
+    {
+      "src": "/(.*)",
+      "dest": "index.js"
+    }
+  ]
+}

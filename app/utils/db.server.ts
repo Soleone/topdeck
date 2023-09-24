@@ -3,15 +3,15 @@ import { PrismaClient } from '@prisma/client'
 import { withAccelerate } from '@prisma/extension-accelerate';
 
 
-let db: PrismaClient
+// TODO: Find right type of client with accelerate
+let db: any
 
 declare global {
   var __db: PrismaClient | undefined
 }
 
 if (process.env.NODE_ENV === 'production') {
-  db = new PrismaClient()
-  const prismaWithAccelerate = new PrismaClient().$extends(withAccelerate())
+  db = new PrismaClient().$extends(withAccelerate())
   db.$connect()
 } else {
   if (!global.__db) {

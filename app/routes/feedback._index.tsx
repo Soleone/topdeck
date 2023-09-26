@@ -2,6 +2,7 @@ import type { ActionFunctionArgs } from "@vercel/remix"
 import { json, redirect } from "@vercel/remix"
 import { Form, useActionData } from "@remix-run/react"
 
+import { Badge } from "~/components/ui/badge"
 import { Button } from "~/components/ui/button"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "~/components/ui/card"
 import { Input } from "~/components/ui/input"
@@ -44,8 +45,8 @@ export default function FeedbackRoute() {
           <CardContent>
             <Label>Your message</Label>
             <Textarea name="content" />
-            {errors?.content ? <div className="text-red-500">{errors?.content}</div> : null}
-            <Label>Your name</Label>
+            {errors?.content ? <div className="text-red-500 mt-1 mb-2"><Badge variant="destructive" className="mr-1">Error</Badge>{errors?.content}</div> : null}
+            <Label className="mt-4 inline-block">Your name</Label>
             <Input type="text" name="author" />
           </CardContent>
           <CardFooter>

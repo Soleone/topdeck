@@ -5,11 +5,13 @@
   "type": "module",
   "scripts": {
     "build": "remix build",
-    "deploy": "fly deploy --remote-only",
+    "deploy": "vercel --prod",
+    "fly": "fly deploy --remote-only",
     "dev": "remix dev --manual",
     "start": "remix-serve ./build/index.js",
     "typecheck": "tsc",
-    "postinstall": "npx prisma generate --accelerate"
+    "migrate": "npx prisma migrate dev",
+    "postinstall": "npx prisma generate --accelerate && npx prisma migrate deploy"
   },
   "dependencies": {
     "@prisma/client": "^5.3.1",

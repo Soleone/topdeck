@@ -1,3 +1,4 @@
+import { Link } from "@remix-run/react";
 import { Mail } from "lucide-react"
 
 
@@ -17,7 +18,7 @@ export default function IndexRoute() {
 
     <div className="mt-6">
       <Button>
-        <Mail className="mr-2 h-4 w-4" /><a href="/feedback">Send feedback</a>
+        <Mail className="mr-2 h-4 w-4" /><Link to="/feedback">Send feedback</Link>
       </Button>
     </div>
   </div >

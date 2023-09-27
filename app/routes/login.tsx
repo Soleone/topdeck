@@ -1,16 +1,15 @@
-import { Label } from "@radix-ui/react-label"
+import { AuthorizationError } from "remix-auth"
 import { Form, useActionData } from "@remix-run/react"
+import { LogIn, UserPlus2 } from "lucide-react"
+import { ActionFunctionArgs, json } from "@vercel/remix"
+import { authenticator } from "~/services/auth.server"
+import UserInputs from "~/components/user_inputs"
+import { Badge } from "~/components/ui/badge"
 import { Button } from "~/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "~/components/ui/card"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "~/components/ui/tabs"
-import { LogIn, UserPlus2 } from "lucide-react"
-import { ActionFunctionArgs, json } from "@vercel/remix"
-import UserInputs from "~/components/user_inputs"
-import { authenticator } from "~/services/auth.server"
-import { Badge } from "~/components/ui/badge"
-import { AuthorizationError } from "remix-auth"
 
-export async function action({ context, request }: ActionFunctionArgs) {
+export async function action({ request }: ActionFunctionArgs) {
   try {
     return await authenticator.authenticate("form", request, {
       successRedirect: "/home",
@@ -20,9 +19,12 @@ export async function action({ context, request }: ActionFunctionArgs) {
     if (error instanceof AuthorizationError) {
       const userError = error.message.replace(/^Invariant failed: /, '')
       return json({ error: userError })
+    } else if (error instanceof Response) {
+      return error
+    } else {
+      return json({ error: "Unknown error" })
     }
   }
-  return json({ success: true, error: null })
 }
 
 export default function LoginRoute() {

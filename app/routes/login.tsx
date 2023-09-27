@@ -6,30 +6,27 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "~/components/ui/tabs"
 import { LogIn, UserPlus2 } from "lucide-react"
 import { ActionFunctionArgs, json } from "@vercel/remix"
 import UserInputs from "~/components/user_inputs"
+import { authenticator } from "~/services/auth.server"
+import { Badge } from "~/components/ui/badge"
+import { AuthorizationError } from "remix-auth"
 
-export async function action({ request }: ActionFunctionArgs) {
-  const errors: Record<string, string> = {}
-
-  const data = await request.formData()
-  const email = data.get("email")?.toString()
-  const password = data.get("password")?.toString()
-  // TODO: Hash password
-
-  if (!email) {
-    errors.email = "Invalid"
+export async function action({ context, request }: ActionFunctionArgs) {
+  try {
+    return await authenticator.authenticate("form", request, {
+      successRedirect: "/home",
+      throwOnError: true
+    })
+  } catch (error) {
+    if (error instanceof AuthorizationError) {
+      const userError = error.message.replace(/^Invariant failed: /, '')
+      return json({ error: userError })
+    }
   }
-
-  if (!password) {
-    errors.password = "Required"
-  }
-
-  let user = null
-  //user = authenticator.authenticate(request)
-  return json(errors)
+  return json({ success: true, error: null })
 }
 
 export default function LoginRoute() {
-  const errors = useActionData<typeof action>()
+  const status = useActionData<typeof action>()
 
   return (
     <div>
@@ -51,12 +48,14 @@ export default function LoginRoute() {
             </CardHeader>
             <CardContent>
               <Form method="post" action="/login">
-                <UserInputs errors={errors} />
-                <div className="mt-4">
+                <UserInputs />
+
+                <div className="mt-4 flex justify-between">
                   <Button type="submit">
                     <LogIn className="mr-1 h-4 w-4" />
                     Sign in
                   </Button>
+                  {status?.error ? <Badge variant="destructive" className="ml-1 mt-2">{status.error}</Badge> : null}
                 </div>
               </Form>
             </CardContent>
@@ -88,6 +87,6 @@ export default function LoginRoute() {
           </Card>
         </TabsContent>
       </Tabs>
-    </div>
+    </div >
   )
 }

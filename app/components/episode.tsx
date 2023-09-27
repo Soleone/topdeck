@@ -1,13 +1,19 @@
 const ROOT_URL = "https://podcasters.spotify.com/pod/show/topdeckpodcast/embed/episodes/"
 
-export default function Episode({ path }: { path: string }) {
+interface Props {
+  path: string
+  title: string
+  src: string
+}
+
+export default function Episode({ path, title, src }: Props) {
   return <div>
-    <iframe
-      src={`${ROOT_URL}/${path}`}
-      height="122px"
-      width="600px"
-      frameBorder="0"
-      scrolling="no"
-    ></iframe>
+    <div className="text-2xl mb-2">{title}</div>
+    {!!src &&
+      <div>
+        <audio controls className="mx-auto">
+          <source src={src} type="audio/mpeg" />
+        </audio>
+      </div>}
   </div>
 }

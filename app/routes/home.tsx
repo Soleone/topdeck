@@ -23,10 +23,10 @@ export default function HomeRoute() {
   return <div className="mx-auto max-w-md">
     <div className="text-center">
       {episodes.map((episode, index) => {
-        return <>
+        return <div key={episode.path} >
           <span>Episode {index + 1}</span>
-          <Episode key={episode.path} path={episode.path} title={episode.title} src={episode.src} />
-        </>
+          <Episode path={episode.path} title={episode.title} src={episode.src} />
+        </div>
       })}
     </div>
 

@@ -9,13 +9,14 @@ import {
   ScrollRestoration,
 } from "@remix-run/react"
 
-import stylesheet from "~/tailwind.css";
+import stylesheet from "~/tailwind.css"
+import React from "react"
 export { ErrorBoundary } from "./components/error_boundary"
 
 export const links: LinksFunction = () => [
   { rel: "stylesheet", href: stylesheet },
   ...(cssBundleHref ? [{ rel: "stylesheet", href: cssBundleHref }] : []),
-];
+]
 
 export default function App() {
   return (
@@ -27,20 +28,27 @@ export default function App() {
         <Links />
       </head>
       <body>
-        <div className="p-4 mx-0 lg:mx-auto max-w-full lg:max-w-screen-lg">
-          <h1 className="mb-10">
-            <a href="/home" className="flex flex-col items-center">
-              <img src="/logo.png" width="160" className="mb-2" />
-              <span className="text-center inline-blockr">a Gods Unchained podcast</span>
-            </a>
-          </h1>
-
-          <Outlet />
-        </div>
-        <ScrollRestoration />
-        <Scripts />
-        <LiveReload />
+        <Layout>
+          <ScrollRestoration />
+          <Scripts />
+          <LiveReload />
+        </Layout>
       </body>
     </html>
   )
+}
+
+function Layout({ children }: { children: React.ReactNode }) {
+  return <>
+    <div className="p-4 mx-0 lg:mx-auto max-w-full lg:max-w-screen-lg">
+      <h1 className="mb-10">
+        <a href="/home" className="flex flex-col items-center">
+          <img src="/logo.png" width="160" className="mb-2" />
+          <span className="text-center inline-blockr">a Gods Unchained podcast</span>
+        </a>
+      </h1>
+      <Outlet />
+    </div>
+    {children}
+  </>
 }

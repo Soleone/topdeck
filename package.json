@@ -9,7 +9,7 @@
     "dev": "remix dev --manual",
     "start": "remix-serve ./build/index.js",
     "typecheck": "tsc",
-    "migrate": "npx prisma migrate dev",
+    "prisma": "npx prisma generate && npx prisma migrate dev",
     "test": "npx jest",
     "postinstall": "npx prisma generate --no-engine && npx prisma migrate deploy"
   },

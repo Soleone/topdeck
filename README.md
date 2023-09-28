@@ -43,7 +43,7 @@ You can test the following URLs live:
 1. `cp .env.example .env` to be able to set up environment variables
 2. Open the new `.env` file and enter your database url
 3. `npm install` to install all dependencies (might fail on the postinstall step in development, that's ok)
-4. `npm run migrate` to prepare your database schema
+4. `npm run prisma` to prepare your database schema and generate the local Prisma client
 5. `npm run dev` to run the server
 6. Visit https://localhost:3000
 

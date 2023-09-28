@@ -32,15 +32,15 @@ export default function HomeRoute() {
 
     <div className="mt-12 flex justify-center gap-x-4">
       <Button>
-        <Mail className="mr-2 h-4 w-4" /><Link to="/feedback" prefetch="intent">Send feedback</Link>
+        <Link to="/feedback" prefetch="intent"><Mail className="mr-2 h-4 w-4 inline-block" /> Send feedback</Link>
       </Button>
 
       <Button variant="outline">
-        <LogIn className="mr-2 h-4 w-4" /><Link to="/login" prefetch="intent">Login</Link>
+        <Link to="/login" prefetch="intent"><LogIn className="mr-2 h-4 w-4 inline-block" /> Login</Link>
       </Button>
 
       <Button variant="outline">
-        <ActivitySquare className="mr-2 h-4 w-4" /><Link to="/admin" prefetch="intent">Admin</Link>
+        <Link to="/admin" prefetch="intent"><ActivitySquare className="h-4 w-4 inline-block" /> Admin</Link>
       </Button>
     </div>
   </div >

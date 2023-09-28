@@ -21,6 +21,29 @@ export const links: LinksFunction = () => [
   ...(cssBundleHref ? [{ rel: "stylesheet", href: cssBundleHref }] : []),
 ]
 
+const externalLinks = [
+  {
+    image: "apple_podcasts.png",
+    title: "Apple Podcasts",
+    url: "https://podcasts.apple.com/us/podcast/topdeck/id1707765794"
+  },
+  {
+    image: "spotify.png",
+    title: "Spotify",
+    url: "https://open.spotify.com/show/4HeQ7GAswDDs9GPvjMZW4D"
+  },
+  {
+    image: "amazon_music.png",
+    title: "Amazon Music",
+    url: "https://music.amazon.com/podcasts/409d9f7b-f53a-4dcf-a182-eeb5afcd7969/topdeck"
+  },
+  {
+    image: "rss.png",
+    title: "Custom RSS feed",
+    url: "https://anchor.fm/s/e8ea1170/podcast/rss"
+  },
+]
+
 export async function loader({ request }: LoaderFunctionArgs) {
   const user = await authenticator.isAuthenticated(request)
   if (user) {
@@ -55,12 +78,18 @@ function Layout({ children }: { children: React.ReactNode }) {
 
   return <>
     <div className="p-4 mx-0 lg:mx-auto max-w-full lg:max-w-screen-lg">
-      <h1 className="mb-10">
+      <h1 className="mb-2">
         <a href="/home" className="flex flex-col items-center">
           <img src="/logo.png" width="160" className="mb-2" />
           <span>A Gods Unchained Podcast</span>
         </a>
       </h1>
+      <div className="flex items-center justify-center gap-1 mb-10">
+        {externalLinks.map(({ title, url, image }) => {
+          return <a key={title} href={url} target="_blank"><img src={image} /></a>
+        })}
+      </div>
+
       {!!user && <div className="mb-4 flex items-center">
         <Badge variant="outline" className="text-sm mx-auto">
           {user.email}

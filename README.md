@@ -18,6 +18,13 @@ You can test the following URLs live:
 * Login
 * Admin for viewing feedback
 
+## Dependencies
+
+* [Remix](https://remix.run) as the full stack [React](https://react.dev) framework
+* [Prisma](https://prisma.io) for interacting with the database
+* [Tailwind](https://tailwindcss.com) for managing CSS
+* [shadcn/ui](https://ui.shadcn.com/) (radix-ui) for lightweight UI components
+
 ## Contributing
 
 ### Requirements

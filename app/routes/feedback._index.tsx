@@ -21,7 +21,7 @@ export async function action({
   if (!content) {
     return json({ content: "Forgot to type your message!" })
   } else {
-    const todo = await db.feedback.create({
+    await db.feedback.create({
       data: {
         author,
         content,

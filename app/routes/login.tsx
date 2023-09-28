@@ -10,10 +10,14 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "~/com
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "~/components/ui/tabs"
 
 export async function action({ request }: ActionFunctionArgs) {
+  const formData = await request.formData()
+  const intent = formData.get("intent")?.toString() || "login"
+
   try {
-    return await authenticator.authenticate("form", request, {
+    return await authenticator.authenticate(`form-${intent}`, request, {
       successRedirect: "/home",
-      throwOnError: true
+      throwOnError: true,
+      context: { formData }
     })
   } catch (error) {
     if (error instanceof AuthorizationError) {
@@ -22,6 +26,7 @@ export async function action({ request }: ActionFunctionArgs) {
     } else if (error instanceof Response) {
       return error
     } else {
+      console.log(error)
       return json({ error: "Unknown error" })
     }
   }
@@ -49,11 +54,11 @@ export default function LoginRoute() {
               </CardDescription>
             </CardHeader>
             <CardContent>
-              <Form method="post" action="/login">
+              <Form method="post">
                 <UserInputs />
 
                 <div className="mt-4 flex justify-between">
-                  <Button type="submit">
+                  <Button type="submit" name="intent" value="login">
                     <LogIn className="mr-1 h-4 w-4" />
                     Sign in
                   </Button>
@@ -75,14 +80,15 @@ export default function LoginRoute() {
               </CardDescription>
             </CardHeader>
             <CardContent>
-              <Form method="post" action="/signup">
+              <Form method="post">
                 <UserInputs />
 
-                <div className="mt-4">
-                  <Button type="submit">
+                <div className="mt-4 flex justify-between">
+                  <Button type="submit" name="intent" value="signup">
                     <UserPlus2 className="mr-1 h-4 w-4" />
                     Create account
                   </Button>
+                  {status?.error ? <Badge variant="destructive" className="ml-1 mt-2">{status.error}</Badge> : null}
                 </div>
               </Form>
             </CardContent>

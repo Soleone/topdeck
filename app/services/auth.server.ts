@@ -1,28 +1,50 @@
 import { User } from "@prisma/client"
-import { Authenticator } from "remix-auth"
+import { Authenticator, AuthorizationError } from "remix-auth"
 import { FormStrategy } from "remix-auth-form"
 import invariant from "tiny-invariant"
 import { sessionStorage } from "~/services/session.server"
-import { db } from "~/utils/db.server"
+import { db } from "~/lib/db.server"
 
 export const authenticator = new Authenticator<User>(sessionStorage)
 
-authenticator.use(new FormStrategy<User>(async ({ form }) => {
+function hashPassword(password: string) {
+  return password
+}
+
+function extractValidatedEmailAndPassword(form: FormData) {
   const email = form.get("email")?.toString()
   const password = form.get("password")?.toString()
 
   invariant(email, "Email invalid")
   invariant(password, "Password is required")
 
-  // TODO: Hash password
-  const hashed_password = password
+  const hashedPassword = hashPassword(password)
+
+  return { email, password: hashedPassword }
+}
+
+// Login
+authenticator.use(new FormStrategy<User>(async ({ form }) => {
+  const { email, password } = extractValidatedEmailAndPassword(form)
 
   const existingUser = await db.user.findUnique({ where: { email } })
+
   if (existingUser) {
     invariant(existingUser.password === password, "Password is invalid")
     return existingUser
   } else {
-    // TODO: Move this into dedicated signup
-    return await db.user.create({ data: { email, password: hashed_password } })
+    throw new AuthorizationError("User not found")
   }
-}))
+}), "form-login")
+
+// Signup
+authenticator.use(new FormStrategy<User>(async ({ form }) => {
+  const { email, password } = extractValidatedEmailAndPassword(form)
+
+  const existingUser = await db.user.findUnique({ where: { email } })
+  console.log(`Found existing user: ${existingUser}`)
+  invariant(!existingUser, "User already exists")
+
+  console.log(`Creating new user: ${email} and ${password}`)
+  return await db.user.create({ data: { email, password } })
+}), "form-signup")

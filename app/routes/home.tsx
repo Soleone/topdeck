@@ -1,5 +1,5 @@
 import { Link } from "@remix-run/react";
-import { LogIn, Mail } from "lucide-react"
+import { ActivitySquare, LogIn, Mail, Speech } from "lucide-react"
 
 
 import Episode from "~/components/episode";
@@ -37,6 +37,10 @@ export default function HomeRoute() {
 
       <Button variant="outline">
         <LogIn className="mr-2 h-4 w-4" /><Link to="/login" prefetch="intent">Login</Link>
+      </Button>
+
+      <Button variant="outline">
+        <ActivitySquare className="mr-2 h-4 w-4" /><Link to="/admin" prefetch="intent">Admin</Link>
       </Button>
     </div>
   </div >

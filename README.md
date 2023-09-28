@@ -20,11 +20,18 @@ You can test the following URLs live:
 
 ## Contributing
 
-```sh
-npm run dev
-```
+### Requirements
 
-This starts your app in development mode, rebuilding assets on file changes.
+* Postgres installed
+
+### Running in development
+
+1. `cp .env.example .env`
+2. Open `.env` and enter your database url
+3. `npm install` to install all dependencies (might fail on postinstall, that's ok)
+4. `npm run migrate` to prepare your database schema
+5. `npm run dev` to run the server
+6. Visit https://localhost:3000
 
 ## Deployment
 

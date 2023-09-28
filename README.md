@@ -5,18 +5,25 @@
 
 A Remix based Podcast homepage customizable for your needs.
 
-## Live
-
-You can test the following URLs live:
-
-* https://topdeckpodcast.com/ displays home page
-
 ## Features
 
 * Episode links
 * Submit feedback and thanks page
 * Login
 * Admin for viewing feedback
+
+## Live
+
+You can test the following URLs live:
+
+* https://topdeckpodcast.com/ displays home page
+
+##  Pages
+
+* `/`
+* `/feedback`
+* `/login`
+* `/admin`
 
 ## Dependencies
 
@@ -29,13 +36,13 @@ You can test the following URLs live:
 
 ### Requirements
 
-* Postgres installed
+* [Postgres](https://www.postgresql.org) installed
 
 ### Running in development
 
-1. `cp .env.example .env`
-2. Open `.env` and enter your database url
-3. `npm install` to install all dependencies (might fail on postinstall, that's ok)
+1. `cp .env.example .env` to be able to set up environment variables
+2. Open the new `.env` file and enter your database url
+3. `npm install` to install all dependencies (might fail on the postinstall step in development, that's ok)
 4. `npm run migrate` to prepare your database schema
 5. `npm run dev` to run the server
 6. Visit https://localhost:3000

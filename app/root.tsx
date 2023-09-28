@@ -79,7 +79,7 @@ function Layout({ children }: { children: React.ReactNode }) {
   return <>
     <div className="p-4 mx-0 lg:mx-auto max-w-full lg:max-w-screen-lg">
       <h1 className="mb-2">
-        <a href="/home" className="flex flex-col items-center">
+        <a href="/" className="flex flex-col items-center">
           <img src="/logo.png" width="160" className="mb-2" />
           <span>A Gods Unchained Podcast</span>
         </a>

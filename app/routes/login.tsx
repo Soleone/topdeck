@@ -15,7 +15,7 @@ export async function action({ request }: ActionFunctionArgs) {
 
   try {
     return await authenticator.authenticate(`form-${intent}`, request, {
-      successRedirect: "/home",
+      successRedirect: "/",
       throwOnError: true,
       context: { formData }
     })

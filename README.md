@@ -1,3 +1,6 @@
+![MIT license](https://img.shields.io/github/license/Soleone/topdeck)
+![Last commit](https://img.shields.io/github/last-commit/Soleone/topdeck/main)
+
 # Topdeck
 
 A Remix based Podcast homepage customizable for your needs.

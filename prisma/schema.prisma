@@ -6,6 +6,7 @@ datasource db {
   provider  = "postgresql"
   url       = env("DATABASE_URL")
   directUrl = env("DIRECT_DATABASE_URL")
+  shadowDatabaseUrl = env("SHADOWad_DATABASE_URL")
 }
 
 model Feedback {
@@ -13,6 +14,8 @@ model Feedback {
   author  String
   email   String?
   content String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   @@map("feedbacks")
 }
@@ -21,6 +24,8 @@ model User {
   id       Int    @id @default(autoincrement())
   email    String @unique
   password String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   @@map("users")
 }

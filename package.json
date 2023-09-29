@@ -33,6 +33,7 @@
     "react-dom": "^18.2.0",
     "remix-auth": "^3.5.1",
     "remix-auth-form": "^1.3.0",
+    "superjson": "^1.13.3",
     "tailwind-merge": "^1.14.0",
     "tailwindcss-animate": "^1.0.7",
     "tiny-invariant": "^1.3.1"

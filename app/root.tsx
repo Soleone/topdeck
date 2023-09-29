@@ -86,7 +86,7 @@ function Layout({ children }: { children: React.ReactNode }) {
       </h1>
       <div className="flex items-center justify-center gap-1 mb-10">
         {externalLinks.map(({ title, url, image }) => {
-          return <a key={title} href={url} target="_blank"><img src={image} /></a>
+          return <a key={title} href={url} target="_blank"><img src={`/${image}`} /></a>
         })}
       </div>
 

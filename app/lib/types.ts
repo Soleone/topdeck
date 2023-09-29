@@ -1,7 +1,3 @@
-export interface Episode {
-  path: string
-  title: string
-  src: string
-  description: string
-  publishedOn: string
-}
+import { Episode } from "@prisma/client";
+
+export type PartialEpisode = Omit<Episode, "id" | "createdAt" | "updatedAt">

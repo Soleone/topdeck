@@ -1,7 +1,6 @@
 import { Link } from "@remix-run/react";
-import { Mail } from "lucide-react"
-import Episode from "~/components/episode"
-import { Button } from "~/components/ui/button"
+import Episode from "~/components/episode";
+import { Button } from "~/components/ui/button";
 import { db } from "~/lib/db.server";
 import { superjson, useSuperLoaderData } from "~/lib/superjson";
 
@@ -11,23 +10,27 @@ export async function loader() {
   return superjson({ episodes })
 }
 
-export default function HomeRoute() {
+export default function AdminEpisodesRoute() {
   let { episodes } = useSuperLoaderData<typeof loader>()
 
   return <div className="mx-auto max-w-md">
     <div className="text-center">
+      <h2 className="text-2xl mb-6">Episodes Admin</h2>
       {episodes.map((episode, index) => {
-        return <Episode key={episode.path} episode={episode} number={episodes.length - index} />
+        return <div key={episode.path}>
+          <Episode episode={episode} number={episodes.length - index} />
+        </div>
       })}
     </div>
 
-    <div className="mt-12 flex justify-center gap-x-4">
-      <Link to="/feedback" prefetch="intent">
-        <Button>
-          <Mail className="mr-2 h-4 w-4" />
-          Send feedback
-        </Button>
-      </Link>
+    <div className="mt-8">
+      <div className="mt-8">
+        <Link to="/admin/episodes/new">
+          <Button>
+            Submit episode
+          </Button>
+        </Link>
+      </div>
     </div>
   </div>
 }

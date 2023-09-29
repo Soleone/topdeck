@@ -1,21 +1,27 @@
-import { Episode as EpisodeType } from "~/lib/types"
+import { Episode as EpisodeType } from "@prisma/client"
 import { Button } from "./ui/button"
 import { Share } from "lucide-react"
+import { PartialEpisode } from "~/lib/types"
 
 const ROOT_URL = "https://podcasters.spotify.com/pod/show/topdeckpodcast/embed/episodes/"
 
-interface Props {
-  episode: EpisodeType
+export interface Props {
+  episode: PartialEpisode
   number: number
 }
 
 export default function Episode({ episode, number }: Props) {
   const { path, title, src, description, publishedOn } = episode
 
-  return <div className="mb-8">
+  return <div className="mb-12">
     <span>Episode {number}</span>
     &nbsp;&#8226;&nbsp;
-    <span>{publishedOn}</span>
+    <span>{publishedOn.toLocaleString("en-US", {
+      year: "numeric",
+      month: "short",
+      day: "numeric",
+      timeZone: 'UTC'
+    })}</span>
     <div>
       <div className="text-2xl mb-0">{title}</div>
       <div className="text-sm mb-2">{description}</div>

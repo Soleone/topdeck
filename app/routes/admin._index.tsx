@@ -1,7 +1,8 @@
-import { useLoaderData } from "@remix-run/react"
+import { Link, useLoaderData } from "@remix-run/react"
 import { LoaderFunctionArgs, json, redirect } from "@vercel/remix"
 import { authenticator } from "~/services/auth.server"
 import { db } from "~/lib/db.server"
+import { Button } from "~/components/ui/button"
 
 export async function loader({ request }: LoaderFunctionArgs) {
   const user = await authenticator.isAuthenticated(request)
@@ -18,7 +19,7 @@ export default function AdminRoute() {
   const feedbacks = useLoaderData<typeof loader>()
 
   return (
-    <>
+    <div>
       <h2 className="text-2xl">Submitted feedback</h2>
       {
         feedbacks.map((feedback, index) => {
@@ -27,6 +28,14 @@ export default function AdminRoute() {
           </div>
         })
       }
-    </>
+
+      <div className="mt-8">
+        <Link to="/admin/episodes">
+          <Button variant="outline">
+            Episodes
+          </Button>
+        </Link>
+      </div>
+    </div>
   )
 }

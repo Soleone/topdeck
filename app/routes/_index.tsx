@@ -23,9 +23,9 @@ export default function HomeRoute() {
 
     <div className="mt-12 flex justify-center gap-x-4">
       <Link to="/feedback" prefetch="intent">
-        <Button>
-          <Mail className="mr-2 h-4 w-4" />
-          Send feedback
+        <Button className="group">
+          <Mail className="mr-2 h-4 w-4 group-active:translate-x-1 transition" />
+          <span className="group-active:translate-x-1 transition">Send feedback</span>
         </Button>
       </Link>
     </div>

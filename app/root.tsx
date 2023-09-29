@@ -78,15 +78,15 @@ function Layout({ children }: { children: React.ReactNode }) {
 
   return <>
     <div className="p-4 mx-0 lg:mx-auto max-w-full lg:max-w-screen-lg">
-      <h1 className="mb-2">
-        <a href="/" className="flex flex-col items-center">
-          <img src="/logo.png" width="160" className="mb-2" />
-          <span>A Gods Unchained Podcast</span>
+      <h1 className="mb-2 flex justify-center">
+        <a href="/" className="flex flex-col items-center group w-60">
+          <img src="/logo.png" width="160" className="mb-2 object-center group-hover:scale-110 group-hover:rotate-2 transition" />
+          <span className="group-hover:rotate-2 transition">A Gods Unchained Podcast</span>
         </a>
       </h1>
-      <div className="flex items-center justify-center gap-1 mb-10">
+      <div className="flex items-center justify-center gap-2 mb-10">
         {externalLinks.map(({ title, url, image }) => {
-          return <a key={title} href={url} target="_blank"><img src={`/${image}`} /></a>
+          return <a key={title} href={url} target="_blank"><img src={`/${image}`} className="hover:shadow-lg hover:-translate-y-1 transition" /></a>
         })}
       </div>
 

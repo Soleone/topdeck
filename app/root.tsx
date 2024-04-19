@@ -23,6 +23,11 @@ export const links: LinksFunction = () => [
 
 const externalLinks = [
   {
+    image: "x.png",
+    title: "X (Twitter)",
+    url: "https://twitter.com/topdeckcast"
+  },
+  {
     image: "apple_podcasts.png",
     title: "Apple Podcasts",
     url: "https://podcasts.apple.com/us/podcast/topdeck/id1707765794"
@@ -39,7 +44,7 @@ const externalLinks = [
   },
   {
     image: "rss.png",
-    title: "Custom RSS feed",
+    title: "RSS feed",
     url: "https://anchor.fm/s/e8ea1170/podcast/rss"
   },
 ]
@@ -86,7 +91,7 @@ function Layout({ children }: { children: React.ReactNode }) {
       </h1>
       <div className="flex items-center justify-center gap-2 mb-10">
         {externalLinks.map(({ title, url, image }) => {
-          return <a key={title} href={url} target="_blank"><img src={`/${image}`} className="hover:shadow-lg hover:-translate-y-1 transition transform-gpu" /></a>
+          return <a key={title} title={title} href={url} target="_blank"><img src={`/${image}`} className="w-6 h-6 hover:shadow-[0_16px_10px_-8px_rgba(0,0,0,0.3)] hover:-translate-y-1 transition transform-gpu" /></a>
         })}
       </div>
 

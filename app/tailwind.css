@@ -1,4 +1,8 @@
-@import "tailwindcss";
+/* Explicit sources: auto-detection can pick up the client build while the server build runs on Vercel,
+   and the two builds then link different stylesheets, which breaks hydration. */
+@import "tailwindcss" source(none);
+@source "../app";
+@source "../components";
 @import "tw-animate-css";
 @import "../components/soleone/theme/theme.css";
 @import "../components/soleone/material/material.css";

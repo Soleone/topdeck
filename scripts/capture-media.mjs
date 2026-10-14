@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 // Records the live site for the README and portfolios: a hero still of the home page and a loop that scrolls
-// the episodes, opens the feedback form and types a message (never submitted), then returns home.
+// the episodes, spins the theme picker to Catppuccin Mocha, browses in it, then switches back to Topdeck.
 // Usage: npm run media:capture -- [--url https://topdeck.soleone.xyz]
 // Needs agent-browser (with its browser installed) and FFmpeg on the PATH. Recording and encoding come from showcase.
 import { record } from '@soleone/showcase/capture'
@@ -28,28 +28,33 @@ const { durationMs, grid } = await record({
     await page.run('screenshot', hero)
   },
   async drive (page) {
-    await page.sleep(1200)
-    await page.eval(smoothScroll(700))
-    await page.sleep(1800)
-    await page.eval(smoothScroll(1400))
-    await page.sleep(1800)
+    const pickTheme = async (key, steps) => {
+      // A selector, since showcase's page.click misses buttons whose snapshot line carries [expanded=false].
+      await page.run('click', 'button[aria-label="Choose a theme"]')
+      await page.sleep(1200)
+      for (let i = 0; i < steps; i++) {
+        await page.run('press', key)
+        await page.sleep(650)
+      }
+      await page.sleep(500)
+      await page.run('press', 'Enter')
+      await page.sleep(1800)
+    }
+    await page.sleep(1000)
+    await page.eval(smoothScroll(600))
+    await page.sleep(1600)
     await page.eval(smoothScroll(0))
-    await page.sleep(1500)
-    await page.click('Send feedback')
-    await page.waitFor(`!!document.querySelector('textarea[name=content]')`)
-    await page.sleep(800)
-    await page.run('click', 'textarea[name=content]')
-    await page.run('keyboard', 'type', 'Loved the deck tech segment, more of those please!')
+    await page.sleep(1200)
+    await pickTheme('ArrowRight', 2)
+    await page.eval(smoothScroll(600))
+    await page.sleep(1600)
+    await page.eval(smoothScroll(0))
+    await page.sleep(1200)
+    await pickTheme('ArrowLeft', 2)
     await page.sleep(600)
-    await page.run('click', 'input[name=author]')
-    await page.run('keyboard', 'type', 'Sam')
-    await page.sleep(1500)
-    await page.run('click', 'h1 a')
-    await page.waitFor(atHome)
-    await page.sleep(1500)
   },
   async verify (page) {
-    if (!(await page.eval(`${atHome} && scrollY === 0`))) return 'did not end back on the home page'
+    if (!(await page.eval(`${atHome} && scrollY === 0 && document.documentElement.dataset.theme === 'topdeck'`))) return 'did not end on the home page in the Topdeck theme'
   }
 })
 

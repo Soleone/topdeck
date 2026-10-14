@@ -5,7 +5,7 @@
 
 The website for Topdeck, a Gods Unchained podcast: play every episode right in the browser and send the hosts feedback.
 
-**[Visit the live site](https://topdeck-soleone.vercel.app)**
+**[Visit the live site](https://topdeck.soleone.xyz)**
 
 ![Scrolling the episode list and leaving feedback](docs/media/demo.webp)
 

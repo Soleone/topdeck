@@ -1,14 +1,14 @@
 #!/usr/bin/env node
 // Records the live site for the README and portfolios: a hero still of the home page and a loop that scrolls
 // the episodes, opens the feedback form and types a message (never submitted), then returns home.
-// Usage: npm run media:capture -- [--url https://topdeck-soleone.vercel.app]
+// Usage: npm run media:capture -- [--url https://topdeck.soleone.xyz]
 // Needs agent-browser (with its browser installed) and FFmpeg on the PATH. Recording and encoding come from showcase.
 import { record } from '@soleone/showcase/capture'
 import { mkdir } from 'node:fs/promises'
 import path from 'node:path'
 import { parseArgs } from 'node:util'
 
-const { values } = parseArgs({ options: { url: { type: 'string', default: 'https://topdeck-soleone.vercel.app' } } })
+const { values } = parseArgs({ options: { url: { type: 'string', default: 'https://topdeck.soleone.xyz' } } })
 const hero = path.resolve('docs/media/hero.png')
 const out = 'docs/media/demo.webp'
 await mkdir(path.dirname(hero), { recursive: true })

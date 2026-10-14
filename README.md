@@ -3,7 +3,11 @@
 
 # Topdeck
 
-A Remix based Podcast homepage customizable for your needs.
+The website for Topdeck, a Gods Unchained podcast: play every episode right in the browser and send the hosts feedback.
+
+**[Visit the live site](https://topdeck-soleone.vercel.app)**
+
+![Scrolling the episode list and leaving feedback](docs/media/demo.webp)
 
 ## Features
 
@@ -11,12 +15,6 @@ A Remix based Podcast homepage customizable for your needs.
 * Submit feedback and thanks page
 * Login
 * Admin for viewing feedback
-
-## Live
-
-You can test the following URLs live:
-
-* https://topdeckpodcast.com/ displays home page
 
 ##  Pages
 
@@ -45,7 +43,7 @@ You can test the following URLs live:
 3. `npm install` to install all dependencies (might fail on the postinstall step in development, that's ok)
 4. `npm run prisma` to prepare your database schema and generate the local Prisma client
 5. `npm run dev` to run the server
-6. Visit https://localhost:3000
+6. Visit http://localhost:3000
 
 ## Deployment
 

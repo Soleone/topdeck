@@ -1,0 +1,33 @@
+{
+  "$schema": "https://raw.githubusercontent.com/Soleone/showcase/main/schema/showcase.schema.json",
+  "title": "Topdeck",
+  "pitch": "The website for Topdeck, a Gods Unchained podcast: play every episode right in the browser and send the hosts feedback.",
+  "description": "Episodes and listener feedback live in Postgres through Prisma, and a login-protected admin lets the hosts publish new episodes and read what listeners sent.",
+  "kind": "web-app",
+  "stage": "product",
+  "year": 2023,
+  "tech": ["Remix", "React", "Prisma", "Postgres", "Tailwind", "shadcn/ui"],
+  "repo": "https://github.com/Soleone/topdeck",
+  "live": "https://topdeck-soleone.vercel.app",
+  "media": {
+    "hero": "docs/media/hero.png",
+    "motion": "docs/media/demo.webp",
+    "capture": "npm run media:capture"
+  },
+  "brand": {
+    "logo": "public/logo.png"
+  },
+  "demo": {
+    "strategy": "hosted",
+    "local": "npm run dev",
+    "externals": [
+      {
+        "name": "Postgres database",
+        "type": "service",
+        "seam": "DATABASE_URL and DIRECT_DATABASE_URL in .env",
+        "standIn": "bring-your-own",
+        "note": "The live site runs on the real episode database; running it locally needs your own Postgres."
+      }
+    ]
+  }
+}

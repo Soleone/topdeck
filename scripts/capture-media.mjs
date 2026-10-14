@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 // Records the live site for the README and portfolios: a hero still of the home page and a loop that scrolls
-// the episodes, spins the theme picker to Catppuccin Mocha, browses in it, then switches back to Topdeck.
+// the episodes, spins the theme picker from Gilt to Flexoki Light, browses in it, then switches back to Gilt.
 // Usage: npm run media:capture -- [--url https://topdeck.soleone.xyz]
 // Needs agent-browser (with its browser installed) and FFmpeg on the PATH. Recording and encoding come from showcase.
 import { record } from '@soleone/showcase/capture'
@@ -29,12 +29,12 @@ const { durationMs, grid } = await record({
   },
   async drive (page) {
     const pickTheme = async (key, steps) => {
-      // A selector, since showcase's page.click misses buttons whose snapshot line carries [expanded=false].
+      // A selector until showcase > 0.2.0, whose page.click misses buttons snapshotted with [expanded=false].
       await page.run('click', 'button[aria-label="Choose a theme"]')
       await page.sleep(1200)
       for (let i = 0; i < steps; i++) {
         await page.run('press', key)
-        await page.sleep(650)
+        await page.sleep(420)
       }
       await page.sleep(500)
       await page.run('press', 'Enter')
@@ -45,16 +45,16 @@ const { durationMs, grid } = await record({
     await page.sleep(1600)
     await page.eval(smoothScroll(0))
     await page.sleep(1200)
-    await pickTheme('ArrowRight', 2)
+    await pickTheme('ArrowRight', 5)
     await page.eval(smoothScroll(600))
     await page.sleep(1600)
     await page.eval(smoothScroll(0))
     await page.sleep(1200)
-    await pickTheme('ArrowLeft', 2)
+    await pickTheme('ArrowLeft', 5)
     await page.sleep(600)
   },
   async verify (page) {
-    if (!(await page.eval(`${atHome} && scrollY === 0 && document.documentElement.dataset.theme === 'topdeck'`))) return 'did not end on the home page in the Topdeck theme'
+    if (!(await page.eval(`${atHome} && scrollY === 0 && document.documentElement.dataset.theme === 'gilt'`))) return 'did not end on the home page in the Gilt theme'
   }
 })
 

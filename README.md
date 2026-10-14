@@ -15,7 +15,7 @@ The website for Topdeck, a Gods Unchained podcast: play every episode right in t
 * Submit feedback and thanks page
 * Login
 * Admin for viewing feedback
-* Theme picker with 25 themes, from the [soleone component registry](https://github.com/Soleone/shadcn-components)
+* Theme picker with 23 themes, Gilt by default, from the [soleone component registry](https://github.com/Soleone/shadcn-components)
 
 ##  Pages
 

@@ -23,7 +23,7 @@ export default function Episode({ episode, number }: Props) {
       timeZone: 'UTC'
     })}</span>
     <div>
-      <div className="text-2xl mb-0">{title}</div>
+      <div className="text-2xl mb-0 text-primary">{title}</div>
       <div className="text-sm mb-2">{description}</div>
       <div className="flex items-center justify-center gap-2">
         {!!src &&

@@ -64,7 +64,8 @@ export default function App() {
       <head>
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <meta name="theme-color" content="#ffffff" />
+        {/* The default theme leads the list; the provider updates this when the theme changes. */}
+        <meta name="theme-color" content={theme.themeOptions[0].canvas} />
         <Meta />
         <Links />
         <style dangerouslySetInnerHTML={{ __html: theme.themeStyles }} />

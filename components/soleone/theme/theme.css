@@ -1,0 +1,88 @@
+/*
+ * Themes. Each palette theme (head.ts) sets the --om-* slots below on any [data-theme]
+ * element, from CSS generated in the root layout: <html> for the page, or a single element
+ * that should draw in another theme (the theme picker's preview cards). The mapping is
+ * declared on every [data-theme] so tokens resolve against that element's own slots. It sits
+ * in :where() at zero specificity, so the palette blocks and any hand-written theme
+ * (a CssTheme, which writes the region tokens itself) always win. Components only
+ * ever see the region tokens, so a theme never has to know they exist.
+ *
+ * Two names collide with omarchy and are mapped deliberately: its `accent` is the brand color,
+ * so it becomes our primary and focus ring, while shadcn's `--accent` is a quiet hover surface
+ * and takes its `selection`. Its `muted` is a de-emphasized ink, so it becomes dividers and
+ * input edges. `orange` and `brown` are optional in a palette, so they borrow a neighbour.
+ */
+:root {
+  color-scheme: light;
+}
+
+:root.dark {
+  color-scheme: dark;
+}
+
+:where(:root, [data-theme]) {
+  --om-orange: var(--om-yellow);
+  --om-brown: var(--om-red);
+  --background: var(--om-dark-background);
+  --foreground: var(--om-foreground);
+  --card: var(--om-background);
+  --card-foreground: var(--om-foreground);
+  --popover: var(--om-dark-background);
+  --popover-foreground: var(--om-foreground);
+  --primary: var(--om-accent);
+  --primary-foreground: var(--om-on-accent);
+  --secondary: var(--om-lighter-background);
+  --secondary-foreground: var(--om-bright-foreground);
+  --muted: var(--om-lighter-background);
+  --muted-foreground: var(--om-muted-foreground);
+  --accent: var(--om-selection);
+  --accent-foreground: var(--om-bright-foreground);
+  --destructive: var(--om-red);
+  --destructive-foreground: var(--om-on-red);
+  --success: var(--om-green);
+  --border: var(--om-muted);
+  --input: var(--om-muted);
+  --ring: var(--om-accent);
+  --chart-1: var(--om-cyan);
+  --chart-2: var(--om-green);
+  --chart-3: var(--om-yellow);
+  --chart-4: var(--om-magenta);
+  --chart-5: var(--om-blue);
+  --sidebar: var(--om-background);
+  --sidebar-foreground: var(--om-foreground);
+  --sidebar-primary: var(--om-accent);
+  --sidebar-primary-foreground: var(--om-on-accent);
+  --sidebar-accent: var(--om-selection);
+  --sidebar-accent-foreground: var(--om-bright-foreground);
+  --sidebar-border: var(--border);
+  --sidebar-ring: var(--om-accent);
+  --selection: var(--om-selection);
+  --selection-foreground: var(--om-bright-foreground);
+  /* The project cards take eight tints, one per hue slot (an accent is nearly always one of them already). */
+  --tint-1: var(--om-green);
+  --tint-2: var(--om-magenta);
+  --tint-3: var(--om-blue);
+  --tint-4: var(--om-yellow);
+  --tint-5: var(--om-red);
+  --tint-6: var(--om-brown);
+  --tint-7: var(--om-cyan);
+  --tint-8: var(--om-orange);
+  --radius: 0.625rem;
+}
+
+/* A palette's `muted` is an ink, which on a dark canvas is too loud for hairlines. */
+:where(.dark) {
+  --border: color-mix(in oklab, var(--om-muted) 55%, transparent);
+}
+
+/* A new theme spreads through a growing circle that revealTheme (reveal.ts) animates itself,
+   so the default cross-fade stays off while it runs. */
+html.theme-reveal::view-transition-old(root),
+html.theme-reveal::view-transition-new(root) {
+  animation: none;
+  mix-blend-mode: normal;
+}
+
+@theme inline {
+  --color-success: var(--success);
+}

@@ -12,19 +12,23 @@
     "isolatedModules": true,
     "esModuleInterop": true,
     "jsx": "react-jsx",
+    "types": ["@remix-run/node", "vite/client"],
     "moduleResolution": "Bundler",
     "resolveJsonModule": true,
     "target": "ES2022",
     "strict": true,
+    "skipLibCheck": true,
     "allowJs": true,
     "forceConsistentCasingInFileNames": true,
     "baseUrl": ".",
     "paths": {
+      "@/components/soleone/*": ["./components/soleone/*"],
+      "@/*": ["./app/*"],
       "~/*": [
         "./app/*"
       ]
     },
-    // Remix takes care of building everything in `remix build`.
+    // Vite takes care of building everything in `remix vite:build`.
     "noEmit": true
   }
 }

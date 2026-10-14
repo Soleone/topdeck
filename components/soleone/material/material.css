@@ -1,0 +1,21 @@
+/*
+ * The material's tokens: small type for eyebrows and pills, the radius of a surface nested in a
+ * rounded-3xl card, and the shadows that make cards read as physical objects.
+ */
+@theme inline {
+  /* A surface nested inside a rounded-3xl card. */
+  --radius-inner: 1rem;
+  /* Below text-xs, for eyebrows, pills and graph labels. */
+  --text-2xs: 0.6875rem;
+  --text-3xs: 0.625rem;
+  /* The primary button's glow: resting, lit on hover, sunk when pressed. Same layer count, so they animate. */
+  --shadow-glow: 0 0 0 0 transparent, 0 6px 16px -6px var(--primary);
+  --shadow-glow-lifted: 0 0 0 2px color-mix(in oklab, var(--primary) 28%, transparent), 0 8px 18px -5px var(--primary);
+  --shadow-glow-pressed: inset 0 1px 2px rgb(0 0 0 / 0.18), 0 3px 8px -4px var(--primary);
+  /* Cards: the light catching the top edge, a raised surface, and a sunken well for media. */
+  --shadow-rim: inset 0 1px 0 rgb(255 255 255 / 0.07);
+  --shadow-surface: inset 0 1px 0 rgb(255 255 255 / 0.06), 0 10px 24px -12px rgb(0 0 0 / 0.55);
+  --shadow-well: inset 0 1px 3px rgb(0 0 0 / 0.35);
+  --shadow-well-bezel: inset 0 0 0 1px rgb(255 255 255 / 0.08), inset 0 10px 24px rgb(0 0 0 / 0.18);
+  --shadow-swatch: inset 0 -1px 0 rgb(0 0 0 / 0.2);
+}

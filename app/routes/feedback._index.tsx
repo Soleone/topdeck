@@ -45,7 +45,7 @@ export default function FeedbackRoute() {
           <CardContent>
             <Label>Your message</Label>
             <Textarea name="content" />
-            {errors?.content ? <div className="text-red-500 mt-1 mb-2"><Badge variant="destructive" className="mr-1">Error</Badge>{errors?.content}</div> : null}
+            {errors?.content ? <div className="text-destructive mt-1 mb-2"><Badge variant="destructive" className="mr-1">Error</Badge>{errors?.content}</div> : null}
             <Label className="mt-4 inline-block">Your name</Label>
             <Input type="text" name="author" />
           </CardContent>

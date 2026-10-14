@@ -1,5 +1,6 @@
 import { useActionData, useLoaderData } from '@remix-run/react'
 import * as _superjson from 'superjson'
+import type { SuperJSONResult } from 'superjson/dist/types'
 
 export type SuperJsonFunction = <Data extends unknown>(
   data: Data,
@@ -36,13 +37,13 @@ export const superjson: SuperJsonFunction = (data, init = {}) => {
 }
 
 export function useSuperLoaderData<T = AppData>(): UseDataFunctionReturn<T> {
-  const data = useLoaderData()
+  const data = useLoaderData() as SuperJSONResult
   return _superjson.deserialize(data)
 }
 export function useSuperActionData<
   T = AppData,
 >(): UseDataFunctionReturn<T> | null {
-  const data = useActionData()
+  const data = useActionData() as SuperJSONResult | undefined
   return data ? _superjson.deserialize(data) : null
 }
 

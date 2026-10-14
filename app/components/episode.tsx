@@ -13,7 +13,7 @@ export interface Props {
 export default function Episode({ episode, number }: Props) {
   const { path, title, src, description, publishedOn } = episode
 
-  return <div className="mb-12 p-4 rounded-3xl hover:bg-gray-50">
+  return <div className="mb-12 p-4 rounded-3xl hover:bg-muted/60">
     <span>Episode {number}</span>
     &nbsp;&#8226;&nbsp;
     <span>{publishedOn.toLocaleString("en-US", {
@@ -28,7 +28,7 @@ export default function Episode({ episode, number }: Props) {
       <div className="flex items-center justify-center gap-2">
         {!!src &&
           <div>
-            <audio controls className="mx-auto hover:shadow-sm hover:shadow-gray-300 rounded-full">
+            <audio controls className="mx-auto hover:shadow-sm hover:shadow-foreground/20 rounded-full">
               <source src={src} type="audio/mpeg" />
             </audio>
           </div>}

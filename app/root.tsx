@@ -1,8 +1,6 @@
-import { cssBundleHref } from "@remix-run/css-bundle"
 import { json, type LinksFunction, type LoaderFunctionArgs } from "@vercel/remix"
 import {
   Links,
-  LiveReload,
   Meta,
   Outlet,
   Scripts,
@@ -10,21 +8,24 @@ import {
   useLoaderData,
 } from "@remix-run/react"
 
-import stylesheet from "~/tailwind.css"
+import stylesheet from "~/tailwind.css?url"
 import React from "react"
 import { authenticator } from "./services/auth.server"
 import { Badge } from "./components/ui/badge"
+import { ThemeProvider } from "@/components/soleone/theme"
+import { ThemePicker } from "@/components/soleone/theme-picker"
+import { HOTKEY_FALLBACKS, THEME_STORAGE_KEY } from "./lib/theme"
+import { themeHead } from "./lib/theme.server"
 export { ErrorBoundary } from "./components/error_boundary"
 
-export const links: LinksFunction = () => [
-  { rel: "stylesheet", href: stylesheet },
-  ...(cssBundleHref ? [{ rel: "stylesheet", href: cssBundleHref }] : []),
-]
+export const links: LinksFunction = () => [{ rel: "stylesheet", href: stylesheet }]
 
 const externalLinks = [
   {
     image: "x.png",
     title: "X (Twitter)",
+    // A black mark, so dark themes flip it to white.
+    invert: true,
     url: "https://twitter.com/topdeckcast"
   },
   {
@@ -51,28 +52,31 @@ const externalLinks = [
 
 export async function loader({ request }: LoaderFunctionArgs) {
   const user = await authenticator.isAuthenticated(request)
-  if (user) {
-    return json({ user })
-  } else {
-    return json({ user: null })
-  }
+  return json({ user: user ?? null, theme: themeHead })
 }
 
 export default function App() {
+  const { theme } = useLoaderData<typeof loader>()
+
+  // The head script sets data-theme and .dark on <html> before paint, so React must not fight it.
   return (
-    <html lang="en">
+    <html lang="en" className={theme.defaultThemeIsDark ? "dark" : undefined} suppressHydrationWarning>
       <head>
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <meta name="theme-color" content="#ffffff" />
         <Meta />
         <Links />
+        <style dangerouslySetInnerHTML={{ __html: theme.themeStyles }} />
+        <script dangerouslySetInnerHTML={{ __html: theme.themeScript }} />
       </head>
       <body>
-        <Layout>
-          <ScrollRestoration />
-          <Scripts />
-          <LiveReload />
-        </Layout>
+        <ThemeProvider themes={theme.themeOptions} storageKey={THEME_STORAGE_KEY} hotkeyFallbacks={HOTKEY_FALLBACKS}>
+          <Layout>
+            <ScrollRestoration />
+            <Scripts />
+          </Layout>
+        </ThemeProvider>
       </body>
     </html>
   )
@@ -82,16 +86,19 @@ function Layout({ children }: { children: React.ReactNode }) {
   const { user } = useLoaderData<typeof loader>()
 
   return <>
-    <div className="p-4 mx-0 lg:mx-auto max-w-full lg:max-w-screen-lg">
+    <div className="relative p-4 mx-0 lg:mx-auto max-w-full lg:max-w-screen-lg">
+      <div className="absolute top-4 right-4">
+        <ThemePicker tagline={{ text: "A Gods Unchained podcast", highlight: "by Clutch and Aldous" }} />
+      </div>
       <h1 className="mb-2 flex justify-center">
         <a href="/" className="flex flex-col items-center group w-60">
-          <img src="/logo.png" width="160" className="mb-2 object-center group-hover:scale-110 group-hover:rotate-2 transition transform-gpu" />
+          <img src="/logo.png" width="160" className="mb-2 object-center dark:invert group-hover:scale-110 group-hover:rotate-2 transition transform-gpu" />
           <span className="group-hover:rotate-2 transition transform-gpu">A Gods Unchained Podcast</span>
         </a>
       </h1>
       <div className="flex items-center justify-center gap-2 mb-10">
-        {externalLinks.map(({ title, url, image }) => {
-          return <a key={title} title={title} href={url} target="_blank"><img src={`/${image}`} className="w-6 h-6 hover:shadow-[0_16px_10px_-8px_rgba(0,0,0,0.3)] hover:-translate-y-1 transition transform-gpu" /></a>
+        {externalLinks.map(({ title, url, image, invert }) => {
+          return <a key={title} title={title} href={url} target="_blank"><img src={`/${image}`} className={`${invert ? "dark:invert " : ""}w-6 h-6 hover:shadow-[0_16px_10px_-8px_rgba(0,0,0,0.3)] hover:-translate-y-1 transition transform-gpu`} /></a>
         })}
       </div>
 

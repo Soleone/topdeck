@@ -15,6 +15,7 @@ The website for Topdeck, a Gods Unchained podcast: play every episode right in t
 * Submit feedback and thanks page
 * Login
 * Admin for viewing feedback
+* Theme picker with 25 themes, from the [soleone component registry](https://github.com/Soleone/shadcn-components)
 
 ##  Pages
 
@@ -25,7 +26,7 @@ The website for Topdeck, a Gods Unchained podcast: play every episode right in t
 
 ## Dependencies
 
-* [Remix](https://remix.run) as the full stack [React](https://react.dev) framework
+* [Remix](https://remix.run) on [Vite](https://vite.dev) as the full stack [React](https://react.dev) framework
 * [Prisma](https://prisma.io) for interacting with the database
 * [Tailwind](https://tailwindcss.com) for managing CSS
 * [shadcn/ui](https://ui.shadcn.com/) (radix-ui) for lightweight UI components

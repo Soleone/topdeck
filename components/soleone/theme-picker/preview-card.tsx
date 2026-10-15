@@ -21,8 +21,9 @@ function useDrawsDark(mode: ThemeMode) {
 }
 
 // The card is a slab: thin slices behind the face show as its edge once the ring turns it.
-const EDGE_SLICES = 5
-const EDGE_STEP = 1.2 // px between slices, so the slab is about 6px thick
+const EDGE_SLICES = 3
+// Few slices: each is a GPU layer on every card in the ring, which is what makes opening the picker slow.
+const EDGE_STEP = 2 // px between slices, so the slab is about 6px thick
 
 /**
  * A theme drawing itself: a small project card in that theme's own tokens, whatever theme the page
@@ -32,6 +33,9 @@ const EDGE_STEP = 1.2 // px between slices, so the slab is about 6px thick
  * With `depth`, it becomes a physical card for a 3D parent: the surface, text and button float at
  * their own heights (px times depth) and it gains thickness. Nothing inside may clip, since
  * overflow would flatten the layers back onto the face.
+ *
+ * `grain` gives the surface its texture; a card drawn many times over may leave it off, since it is
+ * blended onto the card and that costs the GPU on every frame.
  *
  * With `selectable`, its Select button rises on hover (only where there is hover). `pressed` sinks it;
  * the owner sets it, since a press may come from a touch or a key, which CSS :active misses.
@@ -45,6 +49,7 @@ export function ThemePreviewCard({
   theme,
   tagline = DEFAULT_TAGLINE,
   depth = 0,
+  grain: grained = true,
   className,
   style,
   selectable = false,
@@ -54,6 +59,7 @@ export function ThemePreviewCard({
   theme: ThemeOption
   tagline?: ThemeTagline
   depth?: number
+  grain?: boolean
   selectable?: boolean
   pressed?: boolean
   className?: string
@@ -86,18 +92,20 @@ export function ThemePreviewCard({
             style={{
               transform: `translateZ(${-(slice + 1) * EDGE_STEP}px)`,
               // Darker toward the back, so the edge reads as a side in shadow.
-              background: `color-mix(in oklab, var(--background), black ${30 + slice * 8}%)`,
+              background: `color-mix(in oklab, var(--background), black ${30 + slice * 13}%)`,
             }}
           />
         ))}
-      <div
-        aria-hidden
-        className={cn(
-          "pointer-events-none absolute inset-0 rounded-3xl",
-          dark ? "opacity-12 mix-blend-screen" : "opacity-7 mix-blend-multiply",
-        )}
-        style={{ backgroundImage: grain }}
-      />
+      {grained && (
+        <div
+          aria-hidden
+          className={cn(
+            "pointer-events-none absolute inset-0 rounded-3xl",
+            dark ? "opacity-12 mix-blend-screen" : "opacity-7 mix-blend-multiply",
+          )}
+          style={{ backgroundImage: grain }}
+        />
+      )}
 
       {/* The page canvas around a card surface, the way the site sits a project card on the background. */}
       <div

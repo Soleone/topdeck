@@ -39,7 +39,7 @@ import { Sheen } from "@/components/soleone/material/sheen"
 const CARD_W = 236
 const CARD_H = 252
 const SPACING = 168
-const MAX_SIDE_ANGLE = 80 // degrees; cards further round than this are hidden
+const MAX_SIDE_ANGLE = 50 // degrees; cards further round than this are hidden, as each one is costly to draw
 const FRONT_LIFT = 0.07 // extra scale for the front card
 const PERSPECTIVE = 1100 // px
 const TILT = 10 // degrees the front card leans toward the pointer at its edge
@@ -58,6 +58,22 @@ const FLING_TIME = 0.45 // seconds
 const MAX_FLING = 60 // cards per second
 const VELOCITY_WINDOW = 100 // ms of pointer history a release measures its speed over
 const CATCH_SPEED = 2 // cards per second; a tap on a ring spinning faster only stops it
+
+// Opening draws the front cards first and the outer ones a frame or two later, so the GPU does not
+// have to draw the whole ring in one frame, which it does from scratch a few seconds after it closed.
+const OPEN_REACH = [1.5, 3.5, Infinity] // cards from the front that are drawn, one step every other frame
+
+const SCROLL_KEYS = new Set(["ArrowUp", "ArrowDown", "PageUp", "PageDown", "Home", "End", " "])
+
+// Runs once the page is idle; returns a cancel.
+const whenIdle = (run: () => void) => {
+  if (typeof requestIdleCallback === "undefined") {
+    const timer = window.setTimeout(run, 1000)
+    return () => clearTimeout(timer)
+  }
+  const idle = requestIdleCallback(run, { timeout: 3000 })
+  return () => cancelIdleCallback(idle)
+}
 
 // Narrow screens see the same ring, scaled to fit about three cards across.
 const fitToWindow = () => Math.min(1, window.innerWidth / (CARD_W * 2.6))
@@ -110,6 +126,8 @@ export function ThemePicker({ tagline }: { tagline?: ThemeTagline } = {}) {
   const [warm, setWarm] = useState(false)
   // The picker's size as it pops open.
   const appear = useMotionValue(1)
+  // How far from the front cards are drawn; it widens over the first frames of an open.
+  const reach = useMotionValue(Infinity)
 
   // Continuous ring position in cards; the front card is the one it settles on.
   const position = useMotionValue(0)
@@ -162,14 +180,34 @@ export function ThemePicker({ tagline }: { tagline?: ThemeTagline } = {}) {
     return () => window.removeEventListener("keydown", openFromKey)
   }, [])
 
+  useEffect(() => whenIdle(() => setWarm(true)), [])
+
+  // The first open also works out every card's styles from scratch, each card in its own theme's
+  // tokens, which stalls it. So once the ring has mounted, it is styled and laid out once while hidden:
+  // shown and hidden again in one task, so nothing is drawn, and the browser keeps what it worked out.
   useEffect(() => {
-    if (typeof requestIdleCallback === "undefined") {
-      const timer = window.setTimeout(() => setWarm(true), 1000)
-      return () => clearTimeout(timer)
-    }
-    const idle = requestIdleCallback(() => setWarm(true), { timeout: 3000 })
-    return () => cancelIdleCallback(idle)
-  }, [])
+    if (!warm) return
+    return whenIdle(() => {
+      const popup = stage.current?.closest<HTMLElement>("[hidden]")
+      if (!popup) return
+      popup.style.visibility = "hidden"
+      popup.hidden = false
+      void popup.offsetWidth
+      popup.hidden = true
+      popup.style.visibility = ""
+    })
+  }, [warm])
+
+  // The page stays put behind the picker. Base UI's scroll lock restyles the whole page as the picker
+  // opens, and so would any lock that styles <html>, which costs the first open several frames. So
+  // the picker only cancels what would scroll the page: the wheel here, the scroll keys in onKeyDown,
+  // and touches, which the full-screen popup takes (touch-none).
+  useEffect(() => {
+    if (!open) return
+    const stop = (event: globalThis.WheelEvent) => event.preventDefault()
+    window.addEventListener("wheel", stop, { passive: false })
+    return () => window.removeEventListener("wheel", stop)
+  }, [open])
 
   useEffect(() => {
     if (!open) return
@@ -193,6 +231,15 @@ export function ThemePicker({ tagline }: { tagline?: ThemeTagline } = {}) {
       position.jump(start)
       setFront(start)
       target.current = start
+      reach.jump(OPEN_REACH[0])
+      const widen = (step: number) =>
+        requestAnimationFrame(() =>
+          requestAnimationFrame(() => {
+            reach.jump(OPEN_REACH[step])
+            if (step < OPEN_REACH.length - 1) widen(step + 1)
+          }),
+        )
+      widen(1)
       if (!reduced) {
         appear.jump(0.4)
         animate(appear, 1, appearSpring)
@@ -231,6 +278,8 @@ export function ThemePicker({ tagline }: { tagline?: ThemeTagline } = {}) {
 
   const onKeyDown = (event: KeyboardEvent) => {
     if (event.metaKey || event.ctrlKey || event.altKey) return
+    // Keys the ring has no use for would scroll the page behind it.
+    if (SCROLL_KEYS.has(event.key) && event.target === stage.current) event.preventDefault()
     const typing = event.key.length === 1 && (event.key !== " " || query !== "")
     if (typing && !(event.key === " " && event.target !== stage.current)) {
       event.preventDefault()
@@ -397,6 +446,8 @@ export function ThemePicker({ tagline }: { tagline?: ThemeTagline } = {}) {
     <Dialog.Root
       open={open}
       onOpenChange={onOpenChange}
+      // Focus stays trapped, but the page is kept from scrolling by the picker itself (see above).
+      modal="trap-focus"
       // A chosen theme's reveal hid the cards; they come back, still hidden, for the next open.
       onOpenChangeComplete={(isOpen) => !isOpen && setRevealing(false)}
     >
@@ -444,8 +495,9 @@ export function ThemePicker({ tagline }: { tagline?: ThemeTagline } = {}) {
             }
           />
 
+          {/* will-change keeps the cards' drawing as the picker grows, instead of redrawing them every frame. */}
           <motion.div
-            className="flex w-full flex-col items-center"
+            className="flex w-full flex-col items-center will-change-transform"
             style={{ scale: appear }}
           >
             <div className="text-center">
@@ -499,6 +551,7 @@ export function ThemePicker({ tagline }: { tagline?: ThemeTagline } = {}) {
                       index={index}
                       count={count}
                       position={position}
+                      reach={reach}
                       isFront={index === front}
                       tilt={index === front && !dragging && !reduced}
                       aimRef={frontAim}
@@ -538,6 +591,7 @@ const RingCard = memo(function RingCard({
   index,
   count,
   position,
+  reach,
   isFront,
   tilt,
   aimRef,
@@ -549,6 +603,7 @@ const RingCard = memo(function RingCard({
   index: number
   count: number
   position: MotionValue<number>
+  reach: MotionValue<number>
   isFront: boolean
   tilt: boolean
   aimRef: RefObject<FrontAim | null> // where the front card takes a touch tilt from the ring's gestures
@@ -572,7 +627,9 @@ const RingCard = memo(function RingCard({
   })
   // The last visible card on each side fades as it turns away, so the ring has no hard edge.
   const opacity = useTransform(distance, (d) => Math.min(1, Math.max(0, side + 0.5 - Math.abs(d))))
-  const visibility = useTransform(opacity, (o) => (o <= 0 ? "hidden" : "visible"))
+  const visibility = useTransform([opacity, distance, reach], ([o, d, r]: number[]) =>
+    o <= 0 || Math.abs(d) > r ? "hidden" : "visible",
+  )
   const zIndex = useTransform(distance, (d) => 100 - Math.round(Math.abs(d) * 4))
   const shade = useTransform(distance, (d) => Math.min(0.45, Math.abs(d) * 0.09))
 
@@ -583,8 +640,8 @@ const RingCard = memo(function RingCard({
   const rotateX = useTransform(ty, (v) => -v * TILT)
   const rotateY = useTransform(tx, (v) => v * TILT)
   // Sheen's units: a glare shift as a share of its double-size layer, and a
-  // rim angle that lights the edge away from the pointer. A side card is lit on the edge that faces
-  // the middle of the ring, where the light is.
+  // rim angle that lights the edge away from the pointer. A card turning away is lit on the edge that
+  // faces the middle of the ring, where the light is.
   const glareX = useTransform(tx, (v) => `${v * 25}%`)
   const glareY = useTransform(ty, (v) => `${v * 25}%`)
   const rimAngle = useTransform(
@@ -596,7 +653,12 @@ const RingCard = memo(function RingCard({
   // The shadow falls behind the card and slides against the tilt, like a light above the viewer.
   const shadowX = useTransform(rotateY, (deg) => -deg * 1.6)
   const shadowY = useTransform(rotateX, (deg) => 18 + deg * 0.8)
-  const shadowOpacity = useTransform(distance, (d) => Math.max(0.12, 0.5 - Math.abs(d) * 0.07))
+
+  // Only the front card is lit and casts a shadow; both fade as it turns away. Blurs, masks and blends
+  // on every card in the ring would be more than the GPU can draw in a frame as the picker opens.
+  const near = useTransform(distance, (d) => Math.max(0, 1 - Math.abs(d)))
+  const nearVisibility = useTransform(near, (n) => (n <= 0 ? "hidden" : "visible"))
+  const shadowOpacity = useTransform(near, (n) => n * 0.5)
 
   useEffect(() => {
     if (tilt) return
@@ -659,7 +721,7 @@ const RingCard = memo(function RingCard({
       <motion.div
         aria-hidden
         className="pointer-events-none absolute inset-x-[8%] top-[12%] bottom-0 rounded-4xl bg-black blur-2xl"
-        style={{ x: shadowX, y: shadowY, z: -40, opacity: shadowOpacity }}
+        style={{ x: shadowX, y: shadowY, z: -40, opacity: shadowOpacity, visibility: nearVisibility }}
       />
       <motion.div
         id={`theme-card-${theme.name}`}
@@ -673,21 +735,24 @@ const RingCard = memo(function RingCard({
           theme={theme}
           tagline={taglineText && taglineHighlight ? { text: taglineText, highlight: taglineHighlight } : undefined}
           depth={1}
+          grain={isFront}
           selectable={isFront}
           pressed={pressed}
           className="size-full"
         >
           <motion.div aria-hidden className="absolute inset-0 rounded-3xl bg-black" style={{ opacity: shade }} />
-          <Sheen
-            glareX={glareX}
-            glareY={glareY}
-            rimAngle={rimAngle}
-            shine={shine}
-            rimOpacity={rimOpacity}
-            glare={0.55}
-            rim={0.7}
-            rimWidth={0.5}
-          />
+          <motion.div className="absolute inset-0" style={{ opacity: near, visibility: nearVisibility }}>
+            <Sheen
+              glareX={glareX}
+              glareY={glareY}
+              rimAngle={rimAngle}
+              shine={shine}
+              rimOpacity={rimOpacity}
+              glare={0.55}
+              rim={0.7}
+              rimWidth={0.5}
+            />
+          </motion.div>
         </ThemePreviewCard>
       </motion.div>
     </motion.div>
